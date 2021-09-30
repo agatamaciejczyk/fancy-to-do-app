@@ -6,23 +6,32 @@
   </header>
   <main>
     <section>
-      <label class="input-container container">
-        <input
-          v-model="inputField"
-          type="text"
-          placeholder="search or add"
-        ><button @click="addTask">Add</button>
-      </label>
+      <form @submit.prevent="addTask">
+        <label class="input-container container">
+          <input
+            v-model="inputField"
+            type="text"
+            placeholder="search or add"
+          >
+          <button
+            type="submit"
+            class="grey-button"
+          >
+            Add
+          </button>
+        </label>
+      </form>
     </section>
     <section class="container">
       <ul>
         <li
-          v-for="(task, index) in tasks"
+          v-for="(task, index) in filteredTasks"
           :key="task"
           class="li-element"
         >
-          {{ task }}<button
-            class="remove"
+          {{ task }}
+          <button
+            class="remove grey-button"
             @click="removeTask(index)"
           >
             X
@@ -35,11 +44,14 @@
 
 <script>
 export default {
-  data() {
-    return {
-      tasks: [],
-      inputField: '',
-    };
+  data: () => ({
+    tasks: [],
+    inputField: '',
+  }),
+  computed: {
+    filteredTasks() {
+      return this.tasks.filter((task) => task.includes(this.inputField));
+    },
   },
   methods: {
     addTask() {
@@ -100,19 +112,7 @@ input:focus {
   outline: none;
 }
 .input-container button {
-  position: absolute;
-  top: 0;
-  right: 0;
   width: 100px;
-  height: 100%;
-  border: none;
-  border-radius: 0 50px 50px 0;
-  background-color: #c4c4c4;
-  cursor: pointer;
-  font: inherit;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 0.8rem;
 }
 button:hover {
   background-color: #9e9e9e;
@@ -136,18 +136,21 @@ button:hover {
   font-size: 0.8rem;
 }
 .remove {
+  width: 40px;
+}
+.grey-button {
   position: absolute;
   top: 0;
   right: 0;
+  height: 100%;
   border: none;
-  width: 40px;
-  height: 40px;
   background-color: #c4c4c4;
   border-radius: 0 50px 50px 0;
   font: inherit;
   font-weight: bold;
   font-size: 0.8rem;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 </style>
